@@ -1,54 +1,85 @@
 {
-  "name": "sanity-plugin-mermaid",
-  "version": "1.0.1",
-  "browser": "build/index.js",
-  "author": "Raymond Julin <raymond.julin@gmail.com>",
-  "license": "MIT",
-  "scripts": {
-    "build": "babel src -d build --copy-files",
-    "semantic-release": "semantic-release"
-  },
+  "name": "sanity-plugin-mermaid-charts",
+  "version": "1.0.0",
+  "description": "v3 support for sanity-plugin-mermaid",
   "keywords": [
     "sanity",
-    "plugin",
-    "mermaid",
-    "graph"
+    "sanity-plugin"
   ],
-  "devDependencies": {
-    "@babel/cli": "^7.8.4",
-    "@babel/core": "^7.9.0",
-    "@babel/preset-env": "^7.9.0",
-    "@babel/preset-react": "^7.9.1",
-    "commitizen": "^4.0.3",
-    "cz-conventional-changelog": "^3.1.0",
-    "husky": "^4.2.3",
-    "precise-commits": "^1.0.2",
-    "prettier": "^2.0.1",
-    "react": "^16.8.0",
-    "semantic-release": "^17.0.4"
-  },
-  "dependencies": {
-    "debounce-fn": "^4.0.0",
-    "mermaid": "^8.4.8",
-    "prop-types": "^15.7.2",
-    "react-icons": "^3.9.0"
-  },
-  "peerDependencies": {
-    "@sanity/base": "^0.135.0",
-    "@sanity/components": "^0.135.0",
-    "@sanity/core": "^0.135.0",
-    "react": "^16.8.0"
-  },
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
-    }
-  },
-  "husky": {
-    "hooks": {}
+  "homepage": "https://github.com/AndreBClark/sanity-plugin-mermaid#readme",
+  "bugs": {
+    "url": "https://github.com/AndreBClark/sanity-plugin-mermaid/issues"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/nervetattoo/sanity-plugin-mermaid.git"
+    "url": "git+ssh://git@github.com/AndreBClark/sanity-plugin-mermaid.git"
+  },
+  "license": "MIT",
+  "author": "AndreBClark <andre@cosmicdivision.dev>",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "source": "./src/index.ts",
+      "import": "./dist/index.esm.js",
+      "require": "./dist/index.js",
+      "default": "./dist/index.esm.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.esm.js",
+  "source": "./src/index.ts",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "sanity.json",
+    "src",
+    "v2-incompatible.js"
+  ],
+  "scripts": {
+    "build": "run-s clean && plugin-kit verify-package --silent && pkg-utils build --strict && pkg-utils --strict",
+    "clean": "rimraf dist",
+    "format": "prettier --write --cache --ignore-unknown .",
+    "link-watch": "plugin-kit link-watch",
+    "lint": "eslint .",
+    "prepublishOnly": "run-s build",
+    "watch": "pkg-utils watch --strict"
+  },
+  "dependencies": {
+    "@sanity/incompatible-plugin": "^1.0.4",
+    "@sanity/ui": "^1.8.2",
+    "mermaid": "^10.4.0",
+    "prop-types": "^15.8.1",
+    "react-icons": "^4.11.0"
+  },
+  "devDependencies": {
+    "@sanity/pkg-utils": "^2.4.8",
+    "@sanity/plugin-kit": "^3.1.10",
+    "@types/react": "^18.2.21",
+    "@typescript-eslint/eslint-plugin": "^6.6.0",
+    "@typescript-eslint/parser": "^6.6.0",
+    "eslint": "^8.48.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-config-sanity": "^6.0.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^3.0.3",
+    "prettier-plugin-packagejson": "^2.4.5",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-is": "^18.2.0",
+    "rimraf": "^5.0.1",
+    "sanity": "^3.16.4",
+    "styled-components": "^5.3.11",
+    "typescript": "^5.2.2"
+  },
+  "peerDependencies": {
+    "react": "^18",
+    "sanity": "^3"
+  },
+  "engines": {
+    "node": ">=14"
   }
 }

@@ -1,10 +1,8 @@
 {
-  "paths": {
-    "source": "./src",
-    "compiled": "./build"
-  },
-  "parts": [{
-    "implements": "part:@sanity/base/schema-type",
-    "path": "schema/mermaid.js"
-  }]
+  "parts": [
+    {
+      "implements": "part:@sanity/base/sanity-root",
+      "path": "./v2-incompatible.js"
+    }
+  ]
 }

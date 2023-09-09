@@ -1,6 +1,6 @@
 {
   "extends": "./tsconfig.settings",
-  "include": ["oldsrc", "./package.config.ts"],
+  "include": ["./src", "./package.config.ts"],
   "compilerOptions": {
     "rootDir": ".",
     "jsx": "react-jsx",

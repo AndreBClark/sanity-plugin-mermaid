@@ -5,16 +5,16 @@ import {Plugin as Plugin_2} from 'sanity'
  *
  * ```ts
  * import {defineConfig} from 'sanity'
- * import {mermaidCharts} from 'sanity-plugin-mermaid-charts'
+ * import {myPlugin} from 'sanity-plugin-mermaid'
  *
  * export default defineConfig({
  *   // ...
- *   plugins: [mermaidCharts()],
+ *   plugins: [myPlugin()],
  * })
  * ```
  */
-export declare const mermaidCharts: Plugin_2<void | mermaidChartsConfig>
+export declare const mermaid: Plugin_2<void | mermaidConfig>
 
-declare interface mermaidChartsConfig {}
+declare interface mermaidConfig {}
 
 export {}

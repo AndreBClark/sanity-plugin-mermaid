@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import { useCallback } from 'react';
 
 import {
   set,
@@ -6,23 +6,20 @@ import {
   unset,
 } from 'sanity';
 
-import {
-  Stack,
-  Text,
-  TextInput,
-} from '@sanity/ui';
+import { TextInput } from '@sanity/ui';
 
-export default function CustomStringInput(props: StringInputProps) {
-  const {onChange, value = '', elementProps } = props
+export default function Input(props: StringInputProps) {
+  const {elementProps, onChange, value = ''} = props
+
   const handleChange = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) =>
-      onChange(event.currentTarget.value ? set(event.currentTarget.value) : unset()),
-    [onChange]
+    (event: { currentTarget: { value: any; }; } ) => {
+      const nextValue = event.currentTarget.value
+      onChange(nextValue ? set(nextValue) : unset())
+    },
+    [onChange],
   )
+
   return (
-    <Stack space={3}>
       <TextInput {...elementProps} onChange={handleChange} value={value} />
-      <Text size={1}>Characters: {value?.length || 0}</Text>
-    </Stack>
   )
 }

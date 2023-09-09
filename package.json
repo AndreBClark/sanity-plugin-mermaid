@@ -1,7 +1,7 @@
 {
-  "name": "sanity-plugin-mermaid-charts",
+  "name": "sanity-plugin-mermaid",
   "version": "1.0.0",
-  "description": "v3 support for sanity-plugin-mermaid",
+  "description": "",
   "keywords": [
     "sanity",
     "sanity-plugin"
@@ -15,7 +15,7 @@
     "url": "git+ssh://git@github.com/AndreBClark/sanity-plugin-mermaid.git"
   },
   "license": "MIT",
-  "author": "AndreBClark <andre@cosmicdivision.dev>",
+  "author": "Andre Clark <andre@cosmicdivision.dev>",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -48,9 +48,7 @@
   "dependencies": {
     "@sanity/incompatible-plugin": "^1.0.4",
     "@sanity/ui": "^1.8.2",
-    "mermaid": "^10.4.0",
-    "prop-types": "^15.8.1",
-    "react-icons": "^4.11.0"
+    "mermaid": "^10.4.0"
   },
   "devDependencies": {
     "@sanity/pkg-utils": "^2.4.8",
@@ -58,7 +56,7 @@
     "@types/react": "^18.2.21",
     "@typescript-eslint/eslint-plugin": "^6.6.0",
     "@typescript-eslint/parser": "^6.6.0",
-    "eslint": "^8.48.0",
+    "eslint": "^8.49.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-config-sanity": "^6.0.0",
     "eslint-plugin-prettier": "^5.0.0",

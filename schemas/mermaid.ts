@@ -3,7 +3,7 @@ import {
   defineType,
 } from 'sanity';
 
-import Input from '../src/components/Input';
+import Field from '../src/components/Field';
 
 export default defineType({
   title: 'Mermaid graph',
@@ -15,7 +15,7 @@ export default defineType({
       name: 'definition',
       title: 'Graph definition',
       components: {
-        input: Input,
+        field: Field
       },
     }),
   ],

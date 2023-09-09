@@ -1,8 +1,8 @@
 import { definePlugin } from 'sanity';
 
-import mermaid from '../schema/mermaid';
+import mermaidSchema from '../schemas/mermaid';
 
-interface mermaidChartsConfig {
+interface mermaidConfig {
   /* nothing here yet */
 }
 
@@ -11,20 +11,19 @@ interface mermaidChartsConfig {
  *
  * ```ts
  * import {defineConfig} from 'sanity'
- * import {mermaidCharts} from 'sanity-plugin-mermaid-charts'
+ * import {myPlugin} from 'sanity-plugin-mermaid'
  *
  * export default defineConfig({
  *   // ...
- *   plugins: [mermaidCharts()],
+ *   plugins: [myPlugin()],
  * })
  * ```
  */
-
-export const mermaidCharts = definePlugin<mermaidChartsConfig | void>((config = {}) => {
+export const mermaid = definePlugin<mermaidConfig | void>((config = {}) => {
   return {
-    name: 'sanity-plugin-mermaid-charts',
+    name: 'sanity-plugin-mermaid',
     schema: {
-      types: [mermaid],
-    }
+      types: [mermaidSchema],
+    },
   }
 })

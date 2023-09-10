@@ -8,11 +8,14 @@ import { Badge } from '@sanity/ui';
 
 import useMermaid from '../useMermaid';
 
+const InvalidChart = () => {
+  return <Badge color="warning">Invalid graph definition</Badge>
+}
+
 export default function Mermaid ({
   graph,
   id,
   options = {},
-  fallback = 'Invalid graph definition'
 }: Record<string, any>) {
   const [valid, html] = useMermaid(graph, id, options)
   const ref: MutableRefObject<any> = useRef()
@@ -24,11 +27,5 @@ export default function Mermaid ({
     }
   }, [valid, html])
 
-  return (
-    <>
-      <div key="faux" id={id} />
-      <div key='preview' ref={ref} />
-      {!valid && <Badge color='warning'>{fallback}</Badge>}
-    </>
-  )
+  return <div key="preview" ref={ref} />
 }

@@ -1,12 +1,12 @@
-import {
-  useEffect,
-  useState,
-} from 'react';
+import { useEffect } from 'react';
 
 import mermaid from 'mermaid';
 
-export default function useMermaid(graph = '', id = 'mermaid', options?:  Record<string,any>) {
-  const [svg, setSvg] = useState<Element>()
+export default function useMermaid(graph = '', id = 'mermaid', options: Record<string, any>) {
+  const emptyReturn = [false, ''];
+  const element = document.querySelector(`#${id}`)
+  if (!element) return emptyReturn
+  if (!mermaid.parse(graph)) return emptyReturn;
 
   useEffect(() => {
     mermaid.mermaidAPI.initialize({
@@ -15,18 +15,13 @@ export default function useMermaid(graph = '', id = 'mermaid', options?:  Record
     })
   }, [])
 
-  useEffect(() => {
-    try {
-      mermaid.parse(graph)
-      mermaid.mermaidAPI.render(
-        id,
-        graph,
-        new HTMLDivElement
-      )
-    } catch (err) {
+  const {svg, bindFunctions} = mermaid.render(id, graph)
+  element.innerHTML = svg
 
-    }
-  }, [graph, setSvg])
+  useEffect(
+    () => bindFunctions?.(element),
+    [graph]
+  )
 
-  return [svg || '']
+  return [svg !== '', svg || '']
 }

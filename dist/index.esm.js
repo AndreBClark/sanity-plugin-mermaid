@@ -1,90 +1,139 @@
 import { set, unset, defineType, defineField, definePlugin } from 'sanity';
-import { jsx, jsxs, Fragment } from 'react/jsx-runtime';
-import { useCallback, useState, useEffect, useRef } from 'react';
-import { TextInput, Badge, ThemeProvider, Stack } from '@sanity/ui';
+import { jsxs, jsx } from 'react/jsx-runtime';
+import React, { useMemo, useState, useEffect, forwardRef, useCallback } from 'react';
 import mermaid$1 from 'mermaid';
-function Input(props) {
-  const {
-    elementProps,
-    onChange,
-    value = ""
-  } = props;
-  const handleChange = useCallback(event => {
-    const nextValue = event.currentTarget.value;
-    onChange(nextValue ? set(nextValue) : unset());
-  }, [onChange]);
-  return /* @__PURE__ */jsx(TextInput, {
-    ...elementProps,
-    onChange: handleChange,
-    value
-  });
+import { ThemeColorProvider, TextArea, Flex } from '@sanity/ui';
+const DEFAULT_DARK_THEME = 'dark';
+const DEFAULT_LIGHT_THEME = 'default';
+const DARK_THEME_KEY = 'dark';
+const LIGHT_THEME_KEY = 'light';
+const HTML_THEME_ATTRIBUTE = 'data-theme';
+/**
+ * Gets the theme based on config and current data-theme of the HTML.
+ *
+ * @param html The HTML element of the page.
+ * @param config The configuration for this chart.
+ */
+function getTheme(html, config) {
+  var _html$getAttribute, _ref, _config$theme$htmlThe, _config$theme, _config$mermaid;
+  let htmlTheme = (_html$getAttribute = html.getAttribute(HTML_THEME_ATTRIBUTE)) !== null && _html$getAttribute !== void 0 ? _html$getAttribute : LIGHT_THEME_KEY;
+  if (!(htmlTheme === LIGHT_THEME_KEY || htmlTheme === DARK_THEME_KEY)) {
+    htmlTheme = LIGHT_THEME_KEY;
+  }
+  const defaultTheme = htmlTheme === LIGHT_THEME_KEY ? DEFAULT_LIGHT_THEME : DEFAULT_DARK_THEME;
+  return (_ref = (_config$theme$htmlThe = config === null || config === void 0 || (_config$theme = config.theme) === null || _config$theme === void 0 ? void 0 : _config$theme[htmlTheme]) !== null && _config$theme$htmlThe !== void 0 ? _config$theme$htmlThe : config === null || config === void 0 || (_config$mermaid = config.mermaid) === null || _config$mermaid === void 0 ? void 0 : _config$mermaid.theme) !== null && _ref !== void 0 ? _ref : defaultTheme;
 }
-function useMermaid() {
-  let graph = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "";
-  let id = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "mermaid";
-  let options = arguments.length > 2 ? arguments[2] : undefined;
-  const [svg, setSvg] = useState();
+
+/**
+ * Copyright (c) Samuel Wall.
+ *
+ * This source code is licensed under the MIT license found in the
+ * license file in the root directory of this source tree.
+ */
+/**
+ * Component to display Mermaid diagrams.
+ *
+ * @param param0 Diagram to display.
+ * @param param1 Config.
+ * @returns The component.
+ */
+const Mermaid = _ref2 => {
+  let {
+    chart,
+    config: configSrc
+  } = _ref2;
+  // Mermaid doesn't support server-side rendering
+  /* istanbul ignore next */
+  if (typeof window === 'undefined') {
+    return React.createElement("div", {
+      className: "mermaid",
+      "data-mermaid-src": chart
+    }, chart);
+  }
+  const config = useMemo(() => typeof configSrc === 'string' ? JSON.parse(configSrc) : configSrc, [configSrc]);
+  const html = document.querySelector('html');
+  const [rerender, setRerender] = useState(false);
+  const theme = useMemo(() => getTheme(html, config), [config, rerender]);
   useEffect(() => {
-    mermaid$1.mermaidAPI.initialize({
-      startOnLoad: true,
-      theme: (options == null ? void 0 : options.theme) || "neutral"
+    const observer = new MutationObserver(mutations => {
+      for (const mutation of mutations) {
+        if (mutation.type !== 'attributes' || mutation.attributeName !== 'data-theme') {
+          continue;
+        }
+        setRerender(cur => !cur);
+        break;
+      }
     });
+    observer.observe(html, {
+      attributes: true
+    });
+    return () => {
+      try {
+        observer.disconnect();
+      } catch {
+        // Do nothing
+      }
+    };
   }, []);
   useEffect(() => {
-    try {
-      mermaid$1.parse(graph);
-      mermaid$1.mermaidAPI.render(id, graph, new HTMLDivElement());
-    } catch (err) {}
-  }, [graph, setSvg]);
-  return [svg || ""];
-}
-function Mermaid(_ref) {
-  let {
-    graph,
-    id,
-    options = {},
-    fallback = "Invalid graph definition"
-  } = _ref;
-  const [valid, html] = useMermaid(graph, id, options);
-  const ref = useRef();
-  useEffect(() => {
-    const content = valid ? html : "";
-    if (ref.current) {
-      ref.current.innerHTML = content;
+    if (config) {
+      if (config.mermaid) {
+        mermaid$1.initialize({
+          startOnLoad: true,
+          ...config.mermaid,
+          theme
+        });
+      } else {
+        mermaid$1.initialize({
+          startOnLoad: true,
+          theme
+        });
+      }
+      document.querySelectorAll('div.mermaid[data-processed="true"]').forEach(v => {
+        v.removeAttribute('data-processed');
+        v.innerHTML = v.getAttribute('data-mermaid-src');
+      });
+      mermaid$1.contentLoaded();
     }
-  }, [valid, html]);
-  return /* @__PURE__ */jsxs(Fragment, {
-    children: [/* @__PURE__ */jsx("div", {
-      id
-    }, "faux"), /* @__PURE__ */jsx("div", {
+  }, [config, theme]);
+  useEffect(() => {
+    setTimeout(mermaid$1.contentLoaded, 0);
+  }, [chart]);
+  return React.createElement("div", {
+    className: "mermaid",
+    "data-mermaid-src": chart
+  }, chart);
+};
+function Input(props, ref) {
+  const {
+    elementProps,
+    onChange
+  } = props;
+  const [value, setValue] = useState(props.value || "");
+  const handleChange = useCallback(event => {
+    const nextValue = event.currentTarget.value;
+    setValue(nextValue);
+    onChange(nextValue ? set(nextValue) : unset());
+  }, [onChange]);
+  useEffect(() => {
+    setValue(value);
+  }, [setValue]);
+  return /* @__PURE__ */jsxs(ThemeColorProvider, {
+    children: [/* @__PURE__ */jsx(TextArea, {
+      ...elementProps,
+      onChange: handleChange,
+      value,
       ref
-    }, "preview"), !valid && /* @__PURE__ */jsx(Badge, {
-      color: "warning",
-      children: fallback
+    }), /* @__PURE__ */jsx(Flex, {
+      justify: "center",
+      height: "fill",
+      children: /* @__PURE__ */jsx(Mermaid, {
+        chart: value
+      }, value)
     })]
   });
 }
-function Field(props, ref) {
-  const {
-    elementProps,
-    onChange,
-    value = ""
-  } = props;
-  const handleChange = useCallback(event => onChange(event.currentTarget.value ? set(event.currentTarget.value) : unset()), [onChange]);
-  return /* @__PURE__ */jsx(ThemeProvider, {
-    children: /* @__PURE__ */jsxs(Stack, {
-      space: 3,
-      children: [/* @__PURE__ */jsx(Input, {
-        ...elementProps,
-        onChange: handleChange,
-        value,
-        ref
-      }), /* @__PURE__ */jsx(Mermaid, {
-        graph: value
-      })]
-    })
-  });
-}
+const WrappedInput = forwardRef(Input);
 var mermaidSchema = defineType({
   title: "Mermaid graph",
   name: "mermaid",
@@ -93,8 +142,9 @@ var mermaidSchema = defineType({
     type: "text",
     name: "definition",
     title: "Graph definition",
+    rows: 200,
     components: {
-      field: Field
+      input: WrappedInput
     }
   })]
 });

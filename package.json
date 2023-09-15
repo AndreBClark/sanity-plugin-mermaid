@@ -1,7 +1,7 @@
 {
-  "name": "sanity-plugin-mermaid",
+  "name": "sanity-plugin-mermaid-input",
   "version": "1.0.0",
-  "description": "",
+  "description": "use mermaidjs to quickly create charts, now with sanity v3 support",
   "keywords": [
     "sanity",
     "sanity-plugin"

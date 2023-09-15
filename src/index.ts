@@ -1,29 +1,33 @@
+import { MermaidConfig } from 'mermaid';
 import { definePlugin } from 'sanity';
 
 import mermaidSchema from '../schemas/mermaid';
-
-interface mermaidConfig {
-  /* nothing here yet */
-}
 
 /**
  * Usage in `sanity.config.ts` (or .js)
  *
  * ```ts
  * import {defineConfig} from 'sanity'
- * import {myPlugin} from 'sanity-plugin-mermaid'
+ * import {MermaidInput} from 'sanity-plugin-mermaid'
  *
  * export default defineConfig({
  *   // ...
- *   plugins: [myPlugin()],
+ *   plugins: [MermaidInput()],
+
  * })
  * ```
  */
-export const mermaid = definePlugin<mermaidConfig | void>((config = {}) => {
+export const defaultConfig: MermaidConfig = {
+  theme: 'dark',
+  darkMode: true,
+};
+
+export const mermaid = definePlugin<MermaidConfig | void>((userConfig = {}) => {
+  const config: MermaidConfig= {...defaultConfig, ...userConfig};
   return {
     name: 'sanity-plugin-mermaid',
     schema: {
-      types: [mermaidSchema],
+      types: [mermaidSchema(config)],
     },
   }
 })

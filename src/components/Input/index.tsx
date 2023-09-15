@@ -3,11 +3,12 @@ import {
   forwardRef,
   Ref,
   useCallback,
-  useEffect,
   useState,
 } from 'react';
 
+// import Mermaid from '../Mermaid';
 import { Mermaid } from 'mdx-mermaid/lib/Mermaid';
+import { MermaidConfig } from 'mermaid';
 import {
   set,
   StringInputProps,
@@ -20,28 +21,32 @@ import {
   ThemeColorProvider,
 } from '@sanity/ui';
 
-function Input(props: StringInputProps, ref: Ref<HTMLTextAreaElement>) {
-  const {elementProps, onChange } = props;
-  const [value, setValue] = useState(props.value || '');
+interface MermaidStringInput extends StringInputProps{
+  config: MermaidConfig;
+}
+
+function Input(props: MermaidStringInput, ref: Ref<HTMLTextAreaElement>) {
+  const {elementProps, onChange, config } = props;
+  const mermaidConfig = {
+    mermaid: config
+  }
+  const [value, setValue] = useState(props.value || '')
   const handleChange = useCallback(
     (event: ChangeEvent<HTMLTextAreaElement>) => {
-      const nextValue = event.currentTarget.value;
-      setValue(nextValue);
-      onChange(nextValue
-        ? set(nextValue)
-        : unset())
+      const nextValue = event.currentTarget.value
+      setValue(nextValue)
+      onChange(nextValue ? set(nextValue) : unset())
     },
     [onChange],
   );
-  useEffect(()=> {
-    setValue(value);
-  }, [setValue])
+
+
 
   return (
     <ThemeColorProvider>
       <TextArea {...elementProps} onChange={handleChange} value={value} ref={ref} />
       <Flex justify="center" height="fill">
-        <Mermaid key={value} chart={value} />
+        <Mermaid key={value} chart={value} config={mermaidConfig} />
       </Flex>
     </ThemeColorProvider>
   )

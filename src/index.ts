@@ -8,7 +8,7 @@ import mermaidSchema from '../schemas/mermaid';
  *
  * ```ts
  * import {defineConfig} from 'sanity'
- * import {MermaidInput} from 'sanity-plugin-mermaid'
+ * import {MermaidInput} from 'sanity-plugin-mermaid-input'
  *
  * export default defineConfig({
  *   // ...

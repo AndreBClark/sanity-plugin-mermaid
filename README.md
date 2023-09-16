@@ -49,8 +49,8 @@ export default defineType({
     // ... other fields
     defineField({
       type: "mermaid",
-      name: "chart"
-      title: "Flowchart"
+      name: "chart",
+      title: "Flowchart",
     })
   ]
 })
